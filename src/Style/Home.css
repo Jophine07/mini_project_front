@@ -1,0 +1,43 @@
+.decorative-heading {
+    font-family: 'Cursive', sans-serif;
+    color: #4A90E2;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.4);
+    z-index: 0;
+    border-radius: 15px;
+}
+
+.d-grid {
+    z-index: 1; /* Ensures buttons appear above the overlay */
+}
+
+.btn {
+    border-radius: 25px;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.btn:hover {
+    transform: translateY(-5px);
+    background-color: #0056b3; /* Slightly darker shade for the hover effect */
+}
+
+.btn h2 {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+.alert-secondary {
+    background-color: #f0f4f8;
+    border: none;
+    padding: 1.5rem;
+    border-radius: 10px;
+}
+
