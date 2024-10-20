@@ -5,10 +5,10 @@ const AdminDashBoard = () => {
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    // Clear any authentication tokens or user data here.
-    localStorage.removeItem('authToken'); // Example if you're using local storage for tokens.
+    // Remove the token from local storage when logging out
+    localStorage.removeItem('authToken');
     
-    // Navigate to the login page after logout.
+    // Navigate to the login page after logout
     navigate('/adminlogin');
   };
 

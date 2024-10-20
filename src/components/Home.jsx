@@ -10,7 +10,8 @@ const Home = () => {
             {/* Header with Decorative Title */}
             <div className="alert alert-secondary" role="alert">
                 <center>
-                    <h1 className="decorative-heading">JOPHINE'S TURF</h1>
+                    <h1 className="decorative-heading">JOPHINE'S TURF </h1>
+                    <h2 className="decorative-heading">"Our grass is always Greener"</h2>
                 </center>
             </div>
 

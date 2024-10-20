@@ -1,81 +1,112 @@
+import React, { useState } from 'react';
 import axios from 'axios';
-import React, { useState } from 'react'
 import UserDashBoard from './UserDashBoard';
 
-const Prediction = () => {
-    const [timeSlot, setTimeSlot] = useState('');
-    const [prediction, setPrediction] = useState(null);
-    const [errorMessage, setErrorMessage] = useState('');
-  
-    // Handle form input changes
-    const handleChange = (e) => {
-      setTimeSlot(e.target.value);
-    };
-  
-    // Handle form submission
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-  
-      const dataToSend = {
-        timeSlot: timeSlot,  // Send the selected time slot to the backend
-      };
-  
-      try {
-        const response = await axios.post('http://localhost:5000/predictclimate', dataToSend);
-        setPrediction(response.data);  // Assuming the API response contains the prediction data
-      } catch (error) {
-        setErrorMessage('Error predicting climate. Please try again.');
-      }
-    };
-  
-    return (
-      <div>
-                    <UserDashBoard />
-        <h2 className="text-center">Predict Climate for a Time Slot</h2>
-        <form onSubmit={handleSubmit} className="p-4 border rounded shadow-sm bg-light">
-          {/* Select box for time slots */}
-          <div className="form-group mb-3">
-            <label htmlFor="timeSlot">Time Slot:</label>
-            <select 
-              id="timeSlot" 
-              name="timeSlot" 
-              value={timeSlot} 
-              onChange={handleChange} 
-              className="form-select" 
-              required
-            >
-              <option value="">Select a time slot</option>
-              <option value="06:00-09:00">06:00 - 09:00</option>
-              <option value="09:00-12:00">09:00 - 12:00</option>
-              <option value="12:00-15:00">12:00 - 15:00</option>
-              <option value="15:00-18:00">15:00 - 18:00</option>
-              <option value="18:00-21:00">18:00 - 21:00</option>
-            </select>
-          </div>
-  
-          {/* Submit button */}
-          <button type="submit" className="btn btn-primary">Predict</button>
-        </form>
-  
-        {/* Display the prediction result */}
-        {prediction && (
-          <div className="mt-4">
-            <div className="card">
-              <div className="card-body">
-                <h3 className="card-title">Climate Prediction:</h3>
-                <p className="card-text"><strong>Weather:</strong> {prediction.weather}</p>
-                <p className="card-text"><strong>Temperature:</strong> {prediction.temperature} °C</p>
-                <p className="card-text"><strong>Humidity:</strong> {prediction.humidity}%</p>
-                <p className="card-text"><strong>Wind Speed:</strong> {prediction.windSpeed} m/s</p>
-              </div>
-            </div>
-          </div>
-        )}
-  
-        {/* Display error message if there's any */}
-        {errorMessage && <div className="alert alert-danger mt-3">{errorMessage}</div>}
-      </div>
-    );
+function App() {
+  const [temperature, setTemperature] = useState('');
+  const [humidity, setHumidity] = useState('');
+  const [windSpeed, setWindSpeed] = useState('');
+  const [timeSlot, setTimeSlot] = useState('1');
+  const [prediction, setPrediction] = useState('');
+  const [error, setError] = useState('');
+
+  const validateInputs = () => {
+    if (!temperature || temperature < -30 || temperature > 50) {
+      setError('Temperature must be between -30°C and 50°C.');
+      return false;
+    }
+    if (!humidity || humidity < 0 || humidity > 100) {
+      setError('Humidity must be between 0% and 100%.');
+      return false;
+    }
+    if (!windSpeed || windSpeed < 1 || windSpeed > 100) {
+      setError('Wind speed must be between 1 and 100 km/h.');
+      return false;
+    }
+    setError('');
+    return true;
   };
 
-export default Prediction
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateInputs()) return;
+
+    try {
+      const response = await axios.post('http://127.0.0.1:5000/predict', {
+        temperature: parseFloat(temperature),
+        humidity: parseFloat(humidity),
+        wind_speed: parseFloat(windSpeed),
+        time_slot: parseInt(timeSlot),
+      });
+
+      setPrediction(response.data.prediction);
+    } catch (error) {
+      console.error('Error making prediction:', error);
+      setError('An error occurred while making the prediction. Please try again.');
+    }
+  };
+
+  return (
+    <div>
+      <UserDashBoard/>
+    <div style={{ maxWidth: '400px', margin: '50px auto', padding: '20px', background: '#f9f9f9', borderRadius: '8px', boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)' }}>
+      <h1 style={{ textAlign: 'center', marginBottom: '20px' }}>Rainfall Prediction</h1>
+      <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Temperature (°C)</label>
+          <input
+            type="number"
+            placeholder="e.g., 25"
+            value={temperature}
+            onChange={(e) => setTemperature(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+          />
+        </div>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Humidity (%)</label>
+          <input
+            type="number"
+            placeholder="e.g., 60"
+            value={humidity}
+            onChange={(e) => setHumidity(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+          />
+        </div>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Wind Speed (km/h)</label>
+          <input
+            type="number"
+            placeholder="e.g., 15"
+            value={windSpeed}
+            onChange={(e) => setWindSpeed(e.target.value)}
+            required
+            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+          />
+        </div>
+        <div style={{ marginBottom: '15px' }}>
+          <label style={{ display: 'block', marginBottom: '5px' }}>Time Slot</label>
+          <select
+            value={timeSlot}
+            onChange={(e) => setTimeSlot(e.target.value)}
+            style={{ width: '100%', padding: '8px', borderRadius: '4px', border: '1px solid #ddd' }}
+          >
+            <option value="1">6am-10am</option>
+            <option value="2">10am-2pm</option>
+            <option value="3">2pm-6pm</option>
+            <option value="4">6pm-10pm</option>
+            <option value="5">10pm-2am</option>
+            <option value="6">2am-6am</option>
+          </select>
+        </div>
+        <button type="submit" style={{ padding: '10px', background: '#007bff', color: '#fff', border: 'none', borderRadius: '4px', cursor: 'pointer', marginBottom: '10px' }}>Predict</button>
+        {error && <p style={{ color: 'red', textAlign: 'center', marginTop: '10px' }}>{error}</p>}
+      </form>
+      {prediction && <h2 style={{ textAlign: 'center', marginTop: '20px', color: '#007bff' }}>Prediction: {prediction}</h2>}
+    </div>
+    </div>
+  );
+}
+
+export default App;
