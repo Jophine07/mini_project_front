@@ -57,7 +57,7 @@ const Search = () => {
         <center><b><h3>Admin: Manage Bookings</h3></b></center>
       </div>
             
-            <div className="input-group mb-3">
+            <div className="input-group mb-3"> 
                 <input
                     type="date"
                     className="form-control"

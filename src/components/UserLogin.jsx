@@ -22,7 +22,7 @@ const UserLogin = () => {
         try {
             const response = await axios.post('http://localhost:8080/userLogin', data);
             if (response.data.status === 'login success') {
-                // Store token if provided by the server
+                
                 if (response.data.token) {
                     sessionStorage.setItem('token', response.data.token);
                     sessionStorage.setItem('user_name', data.user_name);

@@ -55,7 +55,7 @@ const BookingHistory = () => {
     }
   };
 
-  // Check if a booking is in the future
+  
   const isFutureBooking = (bookingDate) => {
     const currentDate = new Date();
     const bookingDateObj = new Date(bookingDate);
@@ -101,7 +101,7 @@ const BookingHistory = () => {
                   <button
                     className="btn btn-danger"
                     onClick={() => handleCancel(booking._id)}
-                    disabled={!isFutureBooking(booking.date)} // Disable if the booking is not in the future
+                    disabled={!isFutureBooking(booking.date)} 
                   >
                     Request Cancellation
                   </button>

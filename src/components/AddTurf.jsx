@@ -12,6 +12,7 @@ const TurfBooking = () => {
     timeSlot: '',
     addOns: [],
   });
+  const [bookedSlots, setBookedSlots] = useState([]);  // New state to store booked time slots
 
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState('');
@@ -25,6 +26,21 @@ const TurfBooking = () => {
       setBookingDetails((prev) => ({ ...prev, name: sessionUser }));
     }
   }, [navigate]);
+
+  // Fetch already booked time slots based on the selected date
+  useEffect(() => {
+    if (bookingDetails.date) {
+      const fetchBookedSlots = async () => {
+        try {
+          const response = await axios.get(`http://localhost:8080/bookedslots?date=${bookingDetails.date}`);
+          setBookedSlots(response.data);  // Assume response.data is an array of booked time slots
+        } catch (error) {
+          console.error('Error fetching booked slots:', error);
+        }
+      };
+      fetchBookedSlots();
+    }
+  }, [bookingDetails.date]);
 
   const timeSlots = [
     '06:00 AM - 07:00 AM',
@@ -88,6 +104,8 @@ const TurfBooking = () => {
       const response = await axios.post('http://localhost:8080/addturf', bookingDetails);
       if (response.status === 200) {
         setSuccessMessage('Turf booking successful!');
+        alert('Turf booking successful!');
+        navigate('/bookinghistory')
         setBookingDetails({
           name: bookingDetails.name,
           email: '',
@@ -104,6 +122,12 @@ const TurfBooking = () => {
       } else {
         setErrorMessage('Error booking turf. Please try again.');
       }
+    }
+  };
+
+  const handleTimeSlotClick = (slot) => {
+    if (!bookedSlots.includes(slot)) {
+      setBookingDetails({ ...bookingDetails, timeSlot: slot });
     }
   };
 
@@ -126,6 +150,35 @@ const TurfBooking = () => {
     marginBottom: '15px',
   };
 
+  const buttonGridStyle = {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(3, 1fr)',
+    gap: '10px',
+    marginBottom: '20px',
+  };
+
+  // Function to dynamically set button color based on booking status
+  const timeSlotButtonStyle = (slot) => {
+    if (bookedSlots.includes(slot)) {
+      return {
+        backgroundColor: 'red',  // Red for already booked slots
+        color: '#fff',
+        border: 'none',
+        padding: '10px',
+        borderRadius: '5px',
+        cursor: 'not-allowed',  // Not clickable if already booked
+      };
+    }
+    return {
+      backgroundColor: bookingDetails.timeSlot === slot ? '#28a745' : '#007bff',
+      color: '#fff',
+      border: 'none',
+      padding: '10px',
+      borderRadius: '5px',
+      cursor: 'pointer',
+    };
+  };
+
   const checkboxStyle = {
     display: 'flex',
     flexDirection: 'row',
@@ -133,7 +186,7 @@ const TurfBooking = () => {
     marginBottom: '15px',
   };
 
-  const buttonStyle = {
+  const submitButtonStyle = {
     backgroundColor: '#28a745',
     color: '#fff',
     border: 'none',
@@ -214,53 +267,42 @@ const TurfBooking = () => {
           </div>
 
           <div className="mb-3">
-            <label htmlFor="timeSlot" className="form-label">Time Slot</label>
-            <select
-              className="form-select"
-              id="timeSlot"
-              name="timeSlot"
-              value={bookingDetails.timeSlot}
-              onChange={handleChange}
-              required
-              style={inputStyle}
-            >
-              <option value="">Select Time Slot</option>
-              {timeSlots.map((slot, index) => (
-                <option key={index} value={slot}>
+            <label className="form-label">Select Time Slot</label>
+            <div style={buttonGridStyle}>
+              {timeSlots.map((slot) => (
+                <button
+                  key={slot}
+                  type="button"
+                  style={timeSlotButtonStyle(slot)}
+                  onClick={() => handleTimeSlotClick(slot)}
+                  disabled={bookedSlots.includes(slot)}  // Disable the button if it's booked
+                >
                   {slot}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </div>
 
           <div className="mb-3">
             <label className="form-label">Add-ons</label>
             <div style={checkboxStyle}>
-              {addOnsList.map((addOn, index) => (
-                <div key={index} className="form-check">
+              {addOnsList.map((addOn) => (
+                <div key={addOn}>
                   <input
                     type="checkbox"
-                    className="form-check-input"
-                    id={`addOn-${index}`}
+                    id={addOn}
                     name="addOns"
                     value={addOn}
                     checked={bookingDetails.addOns.includes(addOn)}
                     onChange={handleChange}
                   />
-                  <label className="form-check-label" htmlFor={`addOn-${index}`}>
-                    {addOn}
-                  </label>
+                  <label htmlFor={addOn}>{addOn}</label>
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="d-grid">
-            <button type="submit" style={buttonStyle}>
-              Book Now
-            </button>
-          </div>
-
+          <button type="submit" style={submitButtonStyle}>Book Now</button>
           <p style={noteStyle}>
             Note: Cancellation requests are not available for bookings on the current day.
           </p>

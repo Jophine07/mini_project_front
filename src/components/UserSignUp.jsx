@@ -9,26 +9,47 @@ const UserSignUp = () => {
         confirm_user_password: ''
     });
 
+    const [errorMessage, setErrorMessage] = useState(''); 
+
     const inputHandler = (event) => {
         setData({ ...data, [event.target.name]: event.target.value });
     };
 
-    const readValue = () => {
+    const checkUsernameAvailability = async () => {
+        try {
+            const response = await axios.post("http://localhost:8080/checkUsername", { user_name: data.user_name });
+            return response.data.isAvailable; 
+        } catch (error) {
+            console.error('Error checking username:', error);
+            setErrorMessage("Error checking username availability");
+            return false;
+        }
+    };
+
+    const readValue = async () => {
         if (data.user_password !== data.confirm_user_password) {
-            alert("Passwords do not match");
+            setErrorMessage("Passwords do not match");
         } else {
-            axios.post("http://localhost:8080/userSignUp", data)
-                .then((response) => {
-                    if (response.data.status === "Saved") {
-                        alert("Sign Up Successfully");
-                        setData({ user_name: '', user_password: '', confirm_user_password: '' });
-                    } else {
-                        alert("Sign Up Failed");
-                    }
-                })
-                .catch((error) => {
-                    alert(`Error: ${error.message}`);
-                });
+           
+            const isAvailable = await checkUsernameAvailability();
+            if (!isAvailable) {
+                setErrorMessage("Username is already taken. Please choose another one.");
+            } else {
+                
+                axios.post("http://localhost:8080/userSignUp", data)
+                    .then((response) => {
+                        if (response.data.status === "Saved") {
+                            alert("Sign Up Successfully");
+                            setData({ user_name: '', user_password: '', confirm_user_password: '' });
+                            setErrorMessage('');
+                        } else {
+                            setErrorMessage("Sign Up Failed");
+                        }
+                    })
+                    .catch((error) => {
+                        setErrorMessage(`Error: ${error.message}`);
+                    });
+            }
         }
     };
 
@@ -47,6 +68,13 @@ const UserSignUp = () => {
                         <div className="card shadow-lg border-rounded text-bg-light border-info">
                             <div className="card-body">
                                 <h4 className="text-center mb-4">Create an Account</h4>
+
+                                {errorMessage && (
+                                    <div className="alert alert-danger">
+                                        {errorMessage}
+                                    </div>
+                                )}
+
                                 <div className="row g-4">
                                     <div className="col-12">
                                         <label className="form-label">Username</label>

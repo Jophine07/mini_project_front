@@ -7,7 +7,7 @@ import { Link } from 'react-router-dom';
 const Home = () => {
     return (
         <div>
-            {/* Header with Decorative Title */}
+         
             <div className="alert alert-secondary" role="alert">
                 <center>
                     <h1 className="decorative-heading">JOPHINE'S TURF </h1>
@@ -15,7 +15,7 @@ const Home = () => {
                 </center>
             </div>
 
-            {/* Main Background Section */}
+           
             <div
                 style={{
                     backgroundImage: `url(${bgimg})`,
@@ -29,10 +29,10 @@ const Home = () => {
                     position: 'relative',
                 }}
             >
-                {/* Overlay for Better Text Visibility */}
+                
                 <div className="overlay"></div>
 
-                {/* Centered Content with Buttons */}
+                
                 <div className="d-grid gap-3 col-6 mx-auto text-center">
                     <Link className="btn btn-primary btn-lg shadow-lg" to="/adminLogin">
                         <h2>ADMIN LOGIN</h2>
@@ -46,7 +46,7 @@ const Home = () => {
                 </div>
             </div>
 
-            {/* Footer with Background Image */}
+           
             <div
                 style={{
                     backgroundImage: `url(${foot})`,

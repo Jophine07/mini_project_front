@@ -14,6 +14,7 @@ import OrderFood from './components/OrderFood';
 import Bookings from './components/Bookings';
 import Search from './components/Search';
 import ViewOrders from './components/ViewOrders';
+import OrderHistory from './components/OrderHistory';
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
         <Route path='/orderfood' element={<OrderFood/>}/>
         <Route path='/bookings' element={<Bookings/>}/>
         <Route path='/search' element={<Search/>}/>
+        <Route path='/orderhistory' element={<OrderHistory/>}/>
         <Route path='/vieworders' element={<ViewOrders/>}/>
       </Routes>
       </BrowserRouter>

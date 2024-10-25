@@ -8,7 +8,7 @@ const Bookings = () => {
   const [successMessage, setSuccessMessage] = useState('');
 
   useEffect(() => {
-    // Fetch all bookings when the component mounts
+    
     const fetchBookings = async () => {
       try {
         const response = await axios.get('http://localhost:8080/bookings');
@@ -28,7 +28,7 @@ const Bookings = () => {
 
       if (response.data.status === 'success') {
         setSuccessMessage('Booking deleted successfully.');
-        // Update state to remove the deleted booking
+        
         setBookings(bookings.filter((booking) => booking.name !== name));
       } else {
         setErrorMessage('Error in deleting booking.');
@@ -37,7 +37,7 @@ const Bookings = () => {
       setErrorMessage('Error deleting booking. Please try again.');
     }
 
-    // Clear messages after 3 seconds
+    
     setTimeout(() => {
       setErrorMessage('');
       setSuccessMessage('');

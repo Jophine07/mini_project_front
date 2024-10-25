@@ -72,8 +72,10 @@ const OrderFood = () => {
     try {
       const response = await axios.post('http://localhost:8080/api/orders/create-order', orderData);
       setSuccessMessage('Order placed successfully!');
+      alert('Order placed successfully!')
       setOrderItems({});
       setTotalPrice(0);
+      navigate('/OrderHistory')
     } catch (error) {
       console.error('Error placing order:', error);
       setErrorMessage('Failed to place the order. Please try again.');
@@ -134,6 +136,7 @@ const OrderFood = () => {
       <UserDashBoard />
       <div style={formStyle}>
         <h2 style={headerStyle}>Order Food Refreshments</h2>
+        <p className="alert alert-warning">Food orders are made on the date of visiting, and no cancellations are available.</p>
         {errorMessage && <div style={errorStyle}>{errorMessage}</div>}
         {successMessage && <div style={successStyle}>{successMessage}</div>}
 

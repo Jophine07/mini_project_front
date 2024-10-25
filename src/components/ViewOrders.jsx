@@ -5,10 +5,9 @@ import AdminDashBoard from './AdminDashBoard';
 const ViewOrders = () => {
   const [orders, setOrders] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
-  const [loading, setLoading] = useState(true); // To manage loading state
-
+  const [loading, setLoading] = useState(true); 
   useEffect(() => {
-    // Fetch orders when the component mounts
+   
     const fetchOrders = async () => {
       try {
         const response = await axios.get('http://localhost:8080/vieworders');
@@ -16,7 +15,7 @@ const ViewOrders = () => {
       } catch (error) {
         setErrorMessage('Error fetching orders. Please try again.');
       } finally {
-        setLoading(false); // Set loading to false after fetch
+        setLoading(false); 
       }
     };
 

@@ -8,7 +8,7 @@ const UserDashBoard = () => {
     sessionStorage.removeItem('user_name');
     sessionStorage.removeItem('token'); // Remove token if stored
     navigate("/userlogin");
-};
+  };
 
   return (
     <div>
@@ -32,6 +32,10 @@ const UserDashBoard = () => {
               <li className="nav-item">
                 <Link className="nav-link active" to="/orderfood">OrderFood</Link>
               </li>
+              <li className="nav-item">
+                <Link className="nav-link" to="/orderhistory">Order History</Link>
+              </li>
+
               <li className="nav-item">
                 <button className="btn btn-danger" onClick={handleLogout}>Logout</button>
               </li>
