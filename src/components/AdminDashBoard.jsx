@@ -6,7 +6,7 @@ const AdminDashBoard = () => {
 
   const handleLogout = () => {
     // Remove the token from local storage when logging out
-    localStorage.removeItem('authToken');
+    localStorage.removeItem('admin_name');
     
     // Navigate to the login page after logout
     navigate('/adminlogin');

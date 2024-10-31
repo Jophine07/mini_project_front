@@ -19,7 +19,7 @@ const AdminLogin = () => {
             .then((response) => {
                 if (response.data.status === "login success") {
                     // Store the token in session storage
-                    sessionStorage.setItem("admin_token", response.data.token);
+                    sessionStorage.setItem("admin_name", response.data.token);
                     navigate("/bookings");
                 } else if (response.data.status === "User Not Found") {
                     alert("Username does not exist");

@@ -12,8 +12,7 @@ const TurfBooking = () => {
     timeSlot: '',
     addOns: [],
   });
-  const [bookedSlots, setBookedSlots] = useState([]);  // New state to store booked time slots
-
+  const [bookedSlots, setBookedSlots] = useState([]);
   const navigate = useNavigate();
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -27,13 +26,13 @@ const TurfBooking = () => {
     }
   }, [navigate]);
 
-  // Fetch already booked time slots based on the selected date
   useEffect(() => {
     if (bookingDetails.date) {
       const fetchBookedSlots = async () => {
         try {
           const response = await axios.get(`http://localhost:8080/bookedslots?date=${bookingDetails.date}`);
-          setBookedSlots(response.data);  // Assume response.data is an array of booked time slots
+          setBookedSlots(response.data);
+          console.log(setBookedSlots)
         } catch (error) {
           console.error('Error fetching booked slots:', error);
         }
@@ -43,21 +42,11 @@ const TurfBooking = () => {
   }, [bookingDetails.date]);
 
   const timeSlots = [
-    '06:00 AM - 07:00 AM',
-    '07:00 AM - 08:00 AM',
-    '08:00 AM - 09:00 AM',
-    '09:00 AM - 10:00 AM',
-    '10:00 AM - 11:00 AM',
-    '11:00 AM - 12:00 PM',
-    '12:00 PM - 01:00 PM',
-    '01:00 PM - 02:00 PM',
-    '02:00 PM - 03:00 PM',
-    '03:00 PM - 04:00 PM',
-    '04:00 PM - 05:00 PM',
-    '05:00 PM - 06:00 PM',
-    '06:00 PM - 07:00 PM',
-    '07:00 PM - 08:00 PM',
-    '08:00 PM - 09:00 PM',
+    '06:00 AM - 07:00 AM', '07:00 AM - 08:00 AM', '08:00 AM - 09:00 AM',
+    '09:00 AM - 10:00 AM', '10:00 AM - 11:00 AM', '11:00 AM - 12:00 PM',
+    '12:00 PM - 01:00 PM', '01:00 PM - 02:00 PM', '02:00 PM - 03:00 PM',
+    '03:00 PM - 04:00 PM', '04:00 PM - 05:00 PM', '05:00 PM - 06:00 PM',
+    '06:00 PM - 07:00 PM', '07:00 PM - 08:00 PM', '08:00 PM - 09:00 PM',
     '09:00 PM - 10:00 PM',
   ];
 
@@ -82,14 +71,12 @@ const TurfBooking = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     const selectedDate = new Date(bookingDetails.date);
     const today = new Date();
     today.setHours(today.getHours(), today.getMinutes(), 0, 0);
 
     const [startTime, endTime] = bookingDetails.timeSlot.split(' - ');
     const startBookingTime = new Date(selectedDate);
-
     startBookingTime.setHours(
       parseInt(startTime.split(':')[0]) + (startTime.includes('PM') ? 12 : 0),
       parseInt(startTime.split(':')[1])
@@ -157,16 +144,15 @@ const TurfBooking = () => {
     marginBottom: '20px',
   };
 
-  // Function to dynamically set button color based on booking status
   const timeSlotButtonStyle = (slot) => {
     if (bookedSlots.includes(slot)) {
       return {
-        backgroundColor: 'red',  // Red for already booked slots
+        backgroundColor: 'red',
         color: '#fff',
         border: 'none',
         padding: '10px',
         borderRadius: '5px',
-        cursor: 'not-allowed',  // Not clickable if already booked
+        cursor: 'not-allowed',
       };
     }
     return {
@@ -208,8 +194,7 @@ const TurfBooking = () => {
       <div style={formStyle}>
         <h2 style={headerStyle}>Book Your Turf</h2>
         <h4 style={headerStyle}>Welcome, {bookingDetails.name}</h4>
-        {successMessage && <div className="alert alert-success">{successMessage}</div>}
-        {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
+        
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label htmlFor="name" className="form-label">Full Name</label>
@@ -275,16 +260,18 @@ const TurfBooking = () => {
                   type="button"
                   style={timeSlotButtonStyle(slot)}
                   onClick={() => handleTimeSlotClick(slot)}
-                  disabled={bookedSlots.includes(slot)}  // Disable the button if it's booked
+                  disabled={bookedSlots.includes(slot)}
                 >
                   {slot}
                 </button>
               ))}
             </div>
+            {successMessage && <div className="alert alert-success">{successMessage}</div>}
+            {errorMessage && <div className="alert alert-danger">{errorMessage}</div>}
           </div>
 
           <div className="mb-3">
-            <label className="form-label">Add-ons</label>
+            <label className="form-label">Add-Ons</label>
             <div style={checkboxStyle}>
               {addOnsList.map((addOn) => (
                 <div key={addOn}>
@@ -302,9 +289,9 @@ const TurfBooking = () => {
             </div>
           </div>
 
-          <button type="submit" style={submitButtonStyle}>Book Now</button>
+          <button type="submit" style={submitButtonStyle}>Submit</button>
           <p style={noteStyle}>
-            Note: Cancellation requests are not available for bookings on the current day.
+            Note: Slots in <span style={{ color: 'red' }}>red</span> are already booked and cannot be selected.
           </p>
         </form>
       </div>

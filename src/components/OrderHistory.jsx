@@ -55,7 +55,8 @@ const OrderHistory = () => {
       {orderHistory.length === 0 ? (
         <p>No orders found for this user.</p>
       ) : (
-        <>          <p className="alert alert-warning">Food orders are made on the date of visiting, and no cancellations are available.</p>
+        <>
+          <p className="alert alert-warning">Food orders are made on the date of visiting, and no cancellations are available.</p>
           <table className="table table-bordered table-striped mt-4">
             <thead className="table-dark">
               <tr>
@@ -63,6 +64,7 @@ const OrderHistory = () => {
                 <th>Items</th>
                 <th>Total Price</th>
                 <th>Date</th>
+                <th>Status</th> {/* New column for displaying the order status */}
               </tr>
             </thead>
             <tbody>
@@ -80,6 +82,7 @@ const OrderHistory = () => {
                   </td>
                   <td>₹{order.totalPrice}</td>
                   <td>{new Date(order.createdAt).toLocaleDateString()}</td>
+                  <td>{order.status}</td> {/* Display the status of the order */}
                 </tr>
               ))}
             </tbody>
